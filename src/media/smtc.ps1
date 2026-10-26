@@ -131,6 +131,7 @@ while ($true) {
         }
     } catch {
         # Errores transitorios de WinRT (sesión cerrándose, etc.): reintentar.
+        [Console]::Error.WriteLine($_.Exception.Message)
     }
     Start-Sleep -Milliseconds 500
 }

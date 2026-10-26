@@ -56,7 +56,8 @@ while ($true) {
         if ("$status" -ne $lastStatus) { $lastStatus = "$status"; Emit @{ type = 'access'; status = "$status" } }
 
         if ("$status" -eq 'Allowed') {
-            $list = $listener.GetNotificationsAsync([Windows.UI.Notifications.NotificationKinds]::Toast).GetAwaiter().GetResult()
+            $list = Await ($listener.GetNotificationsAsync([Windows.UI.Notifications.NotificationKinds]::Toast)) ([System.Collections.Generic.IReadOnlyList[Windows.UI.Notifications.UserNotification]])
+            if (-not $list) { Start-Sleep -Milliseconds 1000; continue }
             $ids = New-Object 'System.Collections.Generic.HashSet[uint32]'
             foreach ($n in $list) {
                 [void]$ids.Add($n.Id)
@@ -81,6 +82,7 @@ while ($true) {
         }
     } catch {
         # Errores transitorios de WinRT: reintentar en el siguiente ciclo.
+        [Console]::Error.WriteLine($_.Exception.Message)
     }
     Start-Sleep -Milliseconds 1000
 }
