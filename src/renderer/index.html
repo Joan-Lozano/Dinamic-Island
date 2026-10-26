@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self'">
+<title>Dinamic Island</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="island" class="compact">
+
+  <div class="compact-view">
+    <svg class="ring" viewBox="0 0 24 24"><circle class="ring-bg" cx="12" cy="12" r="10"/><circle class="ring-fg" cx="12" cy="12" r="10"/><path class="bolt" d="M13 6 8.5 13H12l-1 5 4.5-7H12z"/></svg>
+    <span class="clock">--:--</span>
+    <span class="wave"><i></i><i></i><i></i><i></i><i></i></span>
+  </div>
+
+  <div class="full-view">
+    <header>
+      <svg class="ring" viewBox="0 0 24 24"><circle class="ring-bg" cx="12" cy="12" r="10"/><circle class="ring-fg" cx="12" cy="12" r="10"/><path class="bolt" d="M13 6 8.5 13H12l-1 5 4.5-7H12z"/></svg>
+      <span class="date"></span>
+      <span class="clock">--:--</span>
+      <span class="batt-pct"></span>
+    </header>
+
+    <button class="nav prev-page" aria-label="Página anterior">‹</button>
+    <button class="nav next-page" aria-label="Página siguiente">›</button>
+
+    <main>
+      <section class="page page-media" data-page="0">
+        <div class="empty">Nada en reproducción</div>
+        <div class="player">
+          <div class="row-top">
+            <div class="art"><img alt=""><span class="src"></span></div>
+            <div class="meta">
+              <div class="title"></div>
+              <div class="artist"></div>
+              <span class="wave"><i></i><i></i><i></i><i></i><i></i></span>
+            </div>
+          </div>
+          <div class="row-seek">
+            <span class="t-pos">00:00</span>
+            <div class="bar"><div class="bar-fill"></div></div>
+            <span class="t-rem">-00:00</span>
+          </div>
+          <div class="row-ctl">
+            <button class="ctl btn-prev" aria-label="Anterior"><svg viewBox="0 0 24 24"><path d="M11 6v12L2.5 12zM21 6v12l-8.5-6z"/></svg></button>
+            <button class="ctl btn-play" aria-label="Reproducir/Pausar"><svg class="i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg><svg class="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+            <button class="ctl btn-next" aria-label="Siguiente"><svg viewBox="0 0 24 24"><path d="M13 6v12l8.5-6zM3 6v12l8.5-6z"/></svg></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="page page-system" data-page="1">
+        <div class="tile" data-k="cpu"><div class="lbl">CPU</div><div class="val">--</div><div class="meter"><div></div></div></div>
+        <div class="tile" data-k="ram"><div class="lbl">RAM</div><div class="val">--</div><div class="meter"><div></div></div></div>
+        <div class="tile" data-k="gpu"><div class="lbl">GPU</div><div class="val">--</div><div class="meter"><div></div></div></div>
+        <div class="tile" data-k="disk"><div class="lbl">Disco</div><div class="val">--</div><div class="meter"><div></div></div></div>
+        <div class="tile net" data-k="rx"><div class="lbl">↓ Bajada</div><div class="val">--</div><div class="meter"><div></div></div></div>
+        <div class="tile net" data-k="tx"><div class="lbl">↑ Subida</div><div class="val">--</div><div class="meter"><div></div></div></div>
+      </section>
+    </main>
+
+    <footer class="dots"><i class="on"></i><i></i></footer>
+  </div>
+</div>
+<script src="renderer.js"></script>
+</body>
+</html>
