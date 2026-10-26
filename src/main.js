@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Tray, Menu, ipcMain, screen, nativeImage } = require('electron');
+const { app, BrowserWindow, Tray, Menu, ipcMain, screen, nativeImage, shell } = require('electron');
 const path = require('path');
 const { SystemMonitor } = require('./system');
 
@@ -11,6 +11,8 @@ if (!app.requestSingleInstanceLock()) app.quit();
 let win;
 let tray;
 let media;
+let notif;
+const history = [];
 let monitor;
 
 function place() {
@@ -73,7 +75,10 @@ function createTray() {
 app.whenReady().then(() => {
   const { MockMedia } = require('./media/mock');
   const { WindowsMedia } = require('./media/windows');
+  const { MockNotifications } = require('./notifications/mock');
+  const { WindowsNotifications } = require('./notifications/windows');
   media = useMock ? new MockMedia() : new WindowsMedia();
+  notif = useMock ? new MockNotifications() : new WindowsNotifications();
   monitor = new SystemMonitor((s) => win && !win.isDestroyed() && win.webContents.send('system:sample', s));
 
   createWindow();
@@ -82,8 +87,16 @@ app.whenReady().then(() => {
   media.on('state', (s) => win && !win.isDestroyed() && win.webContents.send('media:state', s));
   media.start();
 
+  const send = (ch, payload) => win && !win.isDestroyed() && win.webContents.send(ch, payload);
+  notif.on('notification', (n) => { history.unshift(n); history.length = Math.min(history.length, 20); send('notif:new', n); });
+  notif.on('access', (st) => send('notif:access', st));
+  notif.start();
+
   ipcMain.handle('media:get', () => media.state);
   ipcMain.on('media:cmd', (_e, cmd, value) => media.send(cmd, value));
+  ipcMain.handle('notif:get', () => ({ history, access: notif.access }));
+  ipcMain.on('notif:open', (_e, aumid) => notif.open(aumid));
+  ipcMain.on('notif:settings', () => shell.openExternal('ms-settings:privacy-notifications'));
   ipcMain.on('system:watch', (_e, on) => monitor.watch(on));
   ipcMain.on('island:interactive', (_e, on) => {
     if (on) win.setIgnoreMouseEvents(false);
@@ -91,5 +104,5 @@ app.whenReady().then(() => {
   });
 });
 
-app.on('before-quit', () => { media && media.stop(); monitor && monitor.watch(false); });
+app.on('before-quit', () => { media && media.stop(); notif && notif.stop(); monitor && monitor.watch(false); });
 app.on('window-all-closed', () => app.quit());

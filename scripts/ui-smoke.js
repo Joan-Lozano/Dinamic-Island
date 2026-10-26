@@ -26,6 +26,11 @@ fs.mkdirSync(out, { recursive: true });
       media: (...a) => window.__calls.push(a),
       watchSystem: (on) => window.__calls.push(['watch', on]),
       setInteractive: () => {},
+      onNotification: (cb) => { window.__notif = cb; },
+      onNotifAccess: () => {},
+      getNotifications: async () => ({ history: [], access: 'Allowed' }),
+      openApp: (a) => window.__calls.push(['open', a]),
+      openNotifSettings: () => {},
     };
     navigator.getBattery = async () => Object.assign(new EventTarget(), { level: 0.82, charging: true });
   });
@@ -45,9 +50,29 @@ fs.mkdirSync(out, { recursive: true });
   await page.waitForTimeout(800);
   await page.screenshot({ path: path.join(out, '3-system.png') });
 
+  await page.mouse.move(5, 150);
+  await page.waitForTimeout(800);
+  await page.evaluate(() => {
+    window.__notif({ app: 'Telegram Desktop', aumid: 'Telegram.TelegramDesktop', title: 'Laura', body: '¿Quedamos a las 7 para cenar?', time: Date.now() });
+  });
+  await page.waitForTimeout(900);
+  await page.screenshot({ path: path.join(out, '4-toast.png') });
+  await page.evaluate(() => {
+    window.__notif({ app: 'Microsoft Teams', aumid: 'MSTeams_x!MSTeams', title: 'Carlos Ruiz', body: 'Te mencionó en #proyecto-alfa', time: Date.now() - 120000 });
+    window.__notif({ app: 'Outlook', aumid: 'Outlook!App', title: 'Reunión de planificación', body: 'Mañana 10:00 · Sala 3', time: Date.now() - 300000 });
+  });
+  await page.waitForTimeout(6500);
+  await page.screenshot({ path: path.join(out, '5-compact-unread.png') });
+  await page.mouse.move(260, 20);
+  await page.waitForTimeout(700);
+  await page.click('.next-page');
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: path.join(out, '6-notifs.png') });
+  await page.click('.notif-list li');
+
   const calls = await page.evaluate(() => window.__calls);
   console.log('calls:', JSON.stringify(calls));
-  if (!calls.some((c) => c[0] === 'toggle') || !calls.some((c) => c[0] === 'watch' && c[1] === true)) errors.push('IPC calls missing');
+  if (!calls.some((c) => c[0] === 'open') || !calls.some((c) => c[0] === 'toggle') || !calls.some((c) => c[0] === 'watch' && c[1] === true)) errors.push('IPC calls missing');
   await browser.close();
   if (errors.length) { console.error('ERRORS', errors); process.exit(1); }
   console.log('ok ->', out);

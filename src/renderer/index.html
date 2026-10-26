@@ -12,6 +12,7 @@
   <div class="compact-view">
     <svg class="ring" viewBox="0 0 24 24"><circle class="ring-bg" cx="12" cy="12" r="10"/><circle class="ring-fg" cx="12" cy="12" r="10"/><path class="bolt" d="M13 6 8.5 13H12l-1 5 4.5-7H12z"/></svg>
     <span class="clock">--:--</span>
+    <span class="unread" hidden>0</span>
     <span class="wave"><i></i><i></i><i></i><i></i><i></i></span>
   </div>
 
@@ -59,9 +60,23 @@
         <div class="tile net" data-k="rx"><div class="lbl">↓ Bajada</div><div class="val">--</div><div class="meter"><div></div></div></div>
         <div class="tile net" data-k="tx"><div class="lbl">↑ Subida</div><div class="val">--</div><div class="meter"><div></div></div></div>
       </section>
+      <section class="page page-notifs" data-page="2">
+        <div class="empty"></div>
+        <button class="settings-link" hidden>Abrir ajustes de notificaciones</button>
+        <ul class="notif-list"></ul>
+      </section>
+
+      <section class="toast" hidden>
+        <div class="badge"></div>
+        <div class="t-body">
+          <div class="t-app"></div>
+          <div class="t-title"></div>
+          <div class="t-text"></div>
+        </div>
+      </section>
     </main>
 
-    <footer class="dots"><i class="on"></i><i></i></footer>
+    <footer class="dots"><i class="on"></i><i></i><i></i></footer>
   </div>
 </div>
 <script src="renderer.js"></script>

@@ -46,14 +46,14 @@ function peek(ms = 3500) {
 }
 
 /* ---------- Páginas ---------- */
-function showPage() {
+var showPage = function () {
   pages.forEach((p, i) => {
     p.classList.toggle('active', i === page);
     p.classList.toggle('before', i < page);
   });
   dots.forEach((d, i) => d.classList.toggle('on', i === page));
   syncWatch();
-}
+};
 function go(delta) {
   page = (page + delta + pages.length) % pages.length;
   showPage();
@@ -128,7 +128,7 @@ function applyMedia(s) {
   $('.btn-next').classList.toggle('off', !s.canNext);
   $('.bar').classList.toggle('disabled', !s.canSeek || !s.duration);
   renderProgress();
-  if (trackChanged && s.playing) peek();
+  if (trackChanged && s.playing && !island.classList.contains('toasting')) peek();
 }
 
 function currentPos() {
@@ -198,3 +198,110 @@ window.island.onSystem((s) => {
   setTile('rx', rate(s.rx), netPct(s.rx));
   setTile('tx', rate(s.tx), netPct(s.tx));
 });
+
+/* ---------- Notificaciones ---------- */
+const APPS = [
+  { re: /telegram/i, cls: 'telegram', glyph: '✈', name: 'Telegram' },
+  { re: /whatsapp/i, cls: 'whatsapp', glyph: '✆', name: 'WhatsApp' },
+  { re: /outlook|olk|mail/i, cls: 'outlook', glyph: '✉', name: 'Outlook' },
+  { re: /teams/i, cls: 'teams', glyph: 'T', name: 'Teams' },
+];
+function classify(n) {
+  const hay = `${n.app} ${n.aumid}`;
+  const hit = APPS.find((a) => a.re.test(hay));
+  return hit || { cls: '', glyph: (n.app || '?').trim().charAt(0).toUpperCase(), name: n.app || 'Notificación' };
+}
+function makeBadge(n, small) {
+  const info = classify(n);
+  const b = document.createElement('div');
+  b.className = `badge ${info.cls}${small ? ' sm' : ''}`;
+  b.textContent = info.glyph;
+  return b;
+}
+const ago = (t) => {
+  const m = Math.floor((Date.now() - t) / 60000);
+  return m < 1 ? 'ahora' : m < 60 ? `${m} min` : `${Math.floor(m / 60)} h`;
+};
+
+const notifs = [];
+let unread = 0;
+let toastTimer = null;
+const toastEl = $('.toast');
+
+function renderUnread() {
+  const u = $('.unread');
+  u.hidden = unread === 0;
+  u.textContent = unread > 9 ? '9+' : unread;
+}
+function renderNotifList() {
+  const ul = $('.notif-list');
+  ul.replaceChildren();
+  $('.page-notifs .empty').textContent = notifs.length || notifAccess !== 'Allowed' ? '' : 'Sin notificaciones';
+  for (const n of notifs.slice(0, 3)) {
+    const li = document.createElement('li');
+    const txt = document.createElement('div'); txt.className = 'n-text';
+    const t = document.createElement('div'); t.className = 'n-title'; t.textContent = n.title || classify(n).name;
+    const b = document.createElement('div'); b.className = 'n-body'; b.textContent = n.body || classify(n).name;
+    txt.append(t, b);
+    const time = document.createElement('div'); time.className = 'n-time'; time.textContent = ago(n.time);
+    li.append(makeBadge(n, true), txt, time);
+    li.onclick = () => window.island.openApp(n.aumid);
+    ul.append(li);
+  }
+}
+let notifAccess = 'Allowed';
+function renderAccess() {
+  const denied = notifAccess === 'Denied' || notifAccess === 'Unspecified';
+  const empty = $('.page-notifs .empty');
+  if (denied) empty.textContent = 'Windows no permite leer notificaciones. Actívalo en Privacidad › Notificaciones.';
+  else if (!notifs.length) empty.textContent = 'Sin notificaciones';
+  else empty.textContent = '';
+  $('.settings-link').hidden = !denied;
+}
+$('.settings-link').onclick = () => window.island.openNotifSettings();
+
+function showToast(n) {
+  const info = classify(n);
+  const badge = $('.badge', toastEl);
+  badge.className = `badge ${info.cls}`;
+  badge.textContent = info.glyph;
+  $('.t-app').textContent = info.name;
+  $('.t-title').textContent = n.title || '';
+  $('.t-text').textContent = n.body || '';
+  toastEl.onclick = () => { window.island.openApp(n.aumid); endToast(); };
+  setExpanded(true);
+  island.classList.add('toasting');
+  clearTimeout(peekTimer); peekTimer = null;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(endToast, 5500);
+}
+function endToast() {
+  clearTimeout(toastTimer); toastTimer = null;
+  island.classList.remove('toasting');
+  if (!hovered) setTimeout(() => { if (!hovered && !toastTimer) setExpanded(false); }, 200);
+}
+island.addEventListener('mouseenter', () => { if (toastTimer) { clearTimeout(toastTimer); toastTimer = setTimeout(endToast, 4000); } });
+
+function addNotification(n, silent) {
+  notifs.unshift(n);
+  notifs.length = Math.min(notifs.length, 20);
+  renderNotifList(); renderAccess();
+  if (silent) return;
+  if (!(island.classList.contains('expanded') && page === 2)) { unread++; renderUnread(); }
+  showToast(n);
+}
+window.island.onNotification((n) => addNotification(n, false));
+window.island.onNotifAccess((st) => { notifAccess = st; renderAccess(); });
+window.island.getNotifications().then(({ history, access }) => {
+  notifAccess = access;
+  [...history].reverse().forEach((n) => addNotification(n, true));
+  renderAccess();
+});
+
+// Al abrir la página de notificaciones se marcan como leídas.
+const _showPage = showPage;
+showPage = function () {
+  _showPage();
+  if (page === 2) { unread = 0; renderUnread(); renderNotifList(); }
+};
+setInterval(() => { if (page === 2) renderNotifList(); }, 30000);
