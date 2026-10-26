@@ -74,11 +74,12 @@ header .clock { font-size: 14px; }
 header .batt-pct { position: absolute; right: 56px; font-size: 11px; color: var(--dim); font-variant-numeric: tabular-nums; }
 header { padding-left: 24px; }
 
-.nav { position: absolute; top: 76px; width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,.14); text-align: center; line-height: 20px; font-size: 18px; color: var(--fg); z-index: 2; transition: background .2s, transform .15s; }
-.nav:hover { background: rgba(255,255,255,.28); }
-.nav:active { transform: scale(.9); }
-.prev-page { left: 14px; }
-.next-page { right: 14px; }
+.nav { position: absolute; top: 80px; width: 26px; height: 26px; display: grid; place-items: center; color: var(--fg); opacity: .32; z-index: 2; transition: opacity .2s, transform .15s; }
+.nav svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.nav:hover { opacity: .9; }
+.nav:active { transform: scale(.88); }
+.prev-page { left: 10px; }
+.next-page { right: 10px; }
 
 main { position: absolute; top: 40px; left: 46px; right: 46px; height: 108px; overflow: hidden; }
 .page { position: absolute; inset: 0; opacity: 0; transform: translateX(24px); pointer-events: none; transition: opacity .25s, transform .4s var(--ease); }
