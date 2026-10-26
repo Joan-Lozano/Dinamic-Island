@@ -59,5 +59,13 @@
       "language": "3082"
     }
   },
-  "author": "Joan Atinohael Lozano Hidalgo"
+  "author": "Joan Atinohael Lozano Hidalgo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Joan-Lozano/Dinamic-Island.git"
+  },
+  "homepage": "https://github.com/Joan-Lozano/Dinamic-Island#readme",
+  "bugs": {
+    "url": "https://github.com/Joan-Lozano/Dinamic-Island/issues"
+  }
 }
