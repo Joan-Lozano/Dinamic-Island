@@ -193,7 +193,10 @@ const netPct = (b) => 100 * Math.min(1, Math.log10(1 + b / 1024) / 5); // escala
 window.islandApi.onSystem((s) => {
   setTile('cpu', s.cpu + '%', s.cpu);
   setTile('ram', s.ram + '%', s.ram);
-  s.gpu == null ? setTile('gpu', 'N/D', 0) : setTile('gpu', Math.round(s.gpu) + '%', s.gpu);
+  const gpuTile = $('.tile[data-k="gpu"]');
+  $('.lbl', gpuTile).textContent = s.gpuVendor ? `GPU · ${s.gpuVendor}` : 'GPU';
+  gpuTile.title = s.gpuName || '';
+  s.gpu == null ? setTile('gpu', '…', 0) : setTile('gpu', Math.round(s.gpu) + '%', s.gpu);
   s.disk == null ? setTile('disk', 'N/D', 0) : setTile('disk', Math.round(s.disk) + '%', s.disk);
   setTile('rx', rate(s.rx), netPct(s.rx));
   setTile('tx', rate(s.tx), netPct(s.tx));
