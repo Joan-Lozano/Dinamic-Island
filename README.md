@@ -6,7 +6,7 @@ se expande al pasar el ratón (o al cambiar de canción) y muestra:
 - **Multimedia**: Spotify y cualquier reproductor del navegador (Chrome, Edge, Firefox, Brave…), con carátula,
   título, artista, barra de progreso con *seek*, anterior / pausa / siguiente.
   Usa las sesiones multimedia de Windows (SMTC) a través de un puente PowerShell (`src/media/smtc.ps1`).
-- **Monitor de recursos**: CPU, RAM, GPU (solo NVIDIA), disco y red ↑/↓. Solo se muestrea mientras esa página está visible.
+- **Monitor de recursos**: CPU, RAM, GPU (NVIDIA, AMD e Intel), disco y red ↑/↓. Solo se muestrea mientras esa página está visible.
 - **Notificaciones**: Telegram, WhatsApp, Outlook, Teams (y cualquier otra app). Al llegar una, la isla se expande con un aviso
   de ~5 s; un contador rojo marca las no leídas y la tercera página guarda las últimas. Clic en un aviso abre la app.
   Usa `UserNotificationListener` (`src/notifications/notifications.ps1`); hay que permitirlo en
@@ -15,6 +15,12 @@ se expande al pasar el ratón (o al cambiar de canción) y muestra:
 
 Cambia de página con las flechas `‹ ›`, los puntos o el scroll horizontal. Fuera de la isla los clics pasan a las ventanas de debajo.
 Icono en la bandeja: **Ajustes…** (también con doble clic), mostrar/ocultar, *iniciar con Windows*, salir.
+
+## Descargar
+
+Descarga el instalador (`DinamicIsland-Setup-<versión>.exe`) desde la página de [Releases](https://github.com/JoanLozano/Dinamic-Island/releases/latest) y ejecútalo; el asistente deja elegir la carpeta y crea los accesos directos. Requiere Windows 10 1809 o superior.
+
+Los instaladores se firman con un certificado de SignPath Foundation: ver [Code signing policy](#code-signing-policy). Las versiones anteriores a la primera firmada pueden mostrar el aviso de SmartScreen de "editor desconocido".
 
 ## Panel de ajustes
 
