@@ -1,4 +1,4 @@
-// Prueba de humo de la UI en Chromium con una API `window.island` simulada.
+// Prueba de humo de la UI en Chromium con una API `window.islandApi` simulada.
 // Uso: node scripts/ui-smoke.js [carpeta-de-capturas]
 const { chromium } = require('playwright');
 const path = require('path');
@@ -20,7 +20,7 @@ fs.mkdirSync(out, { recursive: true });
       playing: true, position: 62, duration: 251, canNext: true, canPrev: true, canSeek: true, at: Date.now(),
       thumb: 'data:image/svg+xml;base64,' + btoa(svg) };
     window.__calls = [];
-    window.island = {
+    window.islandApi = {
       onMedia: (cb) => setTimeout(() => cb(media), 0),
       onSystem: (cb) => { window.__sys = cb; },
       media: (...a) => window.__calls.push(a),
@@ -31,6 +31,8 @@ fs.mkdirSync(out, { recursive: true });
       getNotifications: async () => ({ history: [], access: 'Allowed' }),
       openApp: (a) => window.__calls.push(['open', a]),
       openNotifSettings: () => {},
+      getSettings: async () => ({ settings: { theme: 'dark', accent: '#30d158' } }),
+      onSettings: () => {},
     };
     navigator.getBattery = async () => Object.assign(new EventTarget(), { level: 0.82, charging: true });
   });

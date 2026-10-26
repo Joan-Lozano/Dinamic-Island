@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div id="notch">
 <div id="island" class="compact">
 
   <div class="compact-view">
@@ -24,8 +25,8 @@
       <span class="batt-pct"></span>
     </header>
 
-    <button class="nav prev-page" aria-label="Página anterior">‹</button>
-    <button class="nav next-page" aria-label="Página siguiente">›</button>
+    <button class="nav prev-page" aria-label="Página anterior"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button>
+    <button class="nav next-page" aria-label="Página siguiente"><svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></svg></button>
 
     <main>
       <section class="page page-media" data-page="0">
@@ -78,6 +79,7 @@
 
     <footer class="dots"><i class="on"></i><i></i><i></i></footer>
   </div>
+</div>
 </div>
 <script src="renderer.js"></script>
 </body>

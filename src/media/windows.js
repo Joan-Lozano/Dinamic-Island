@@ -20,8 +20,9 @@ class WindowsMedia extends EventEmitter {
     this.proc = spawn(
       'powershell.exe',
       ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', script],
-      { windowsHide: true, stdio: ['pipe', 'pipe', 'ignore'] }
+      { windowsHide: true, stdio: ['pipe', 'pipe', 'pipe'] }
     );
+    readline.createInterface({ input: this.proc.stderr }).on('line', (line) => console.error('[smtc]', line));
     readline.createInterface({ input: this.proc.stdout }).on('line', (line) => {
       let msg;
       try { msg = JSON.parse(line); } catch { return; }

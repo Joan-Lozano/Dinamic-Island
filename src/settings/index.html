@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'">
+<title>Dinamic Island · Ajustes</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+  <header class="top">
+    <div class="mark" aria-hidden="true"><i></i></div>
+    <div>
+      <h1>Dinamic Island</h1>
+      <p class="sub">Ajustes · <span id="version"></span></p>
+    </div>
+  </header>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Pantalla</h2>
+      <button class="link" id="identify">Identificar pantallas</button>
+    </div>
+    <p class="hint">Elige en qué monitor aparece la isla.</p>
+    <div class="displays" id="displays" role="radiogroup" aria-label="Pantalla de la isla"></div>
+  </section>
+
+  <section class="card">
+    <h2>Apariencia</h2>
+    <div class="row">
+      <div class="label"><b>Tema</b><span>Automático sigue el modo de Windows.</span></div>
+      <div class="seg" id="theme" role="radiogroup" aria-label="Tema">
+        <button data-v="dark" role="radio">Oscuro</button>
+        <button data-v="light" role="radio">Claro</button>
+        <button data-v="auto" role="radio">Automático</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="label"><b>Color de acento</b><span>Medidores y carga de batería.</span></div>
+      <div class="swatches" id="accents" role="radiogroup" aria-label="Color de acento"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Inicio</h2>
+    <label class="row switch-row">
+      <div class="label"><b>Iniciar con Windows</b><span id="autostart-note">La isla arranca al iniciar sesión.</span></div>
+      <input type="checkbox" id="autoStart" class="switch">
+    </label>
+    <div class="row" id="delay-row">
+      <div class="label"><b>Retraso al iniciar</b><span>Espera a que el escritorio termine de cargar.</span></div>
+      <select id="startDelay">
+        <option value="0">Sin retraso</option>
+        <option value="5">5 segundos</option>
+        <option value="10">10 segundos</option>
+        <option value="30">30 segundos</option>
+        <option value="60">1 minuto</option>
+      </select>
+    </div>
+    <label class="row switch-row">
+      <div class="label"><b>Iniciar oculta</b><span>Se muestra desde el icono de la bandeja.</span></div>
+      <input type="checkbox" id="startHidden" class="switch">
+    </label>
+  </section>
+
+  <section class="card">
+    <h2>Notificaciones</h2>
+    <label class="row switch-row">
+      <div class="label"><b>Mostrar notificaciones en la isla</b><span>Avisos, contador y historial.</span></div>
+      <input type="checkbox" id="notifications" class="switch">
+    </label>
+  </section>
+
+  <footer class="foot">
+    <button class="btn" id="reset">Restablecer ajustes</button>
+    <button class="btn danger" id="quit">Salir de la isla</button>
+  </footer>
+</div>
+<script src="settings.js"></script>
+</body>
+</html>

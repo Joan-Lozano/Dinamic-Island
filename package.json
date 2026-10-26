@@ -1,13 +1,14 @@
 {
   "name": "dinamic-island",
   "version": "0.1.0",
-  "description": "Isla dinámica para Windows: multimedia (Spotify y navegador) y monitor de recursos",
+  "description": "Isla dinámica para Windows: multimedia, notificaciones y monitor de recursos",
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
     "start:mock": "electron . --mock",
     "test:ui": "node scripts/ui-smoke.js",
-    "dist": "electron-builder --win"
+    "dist": "electron-builder --win",
+    "dist:dir": "electron-builder --win --dir"
   },
   "license": "MIT",
   "dependencies": {
@@ -20,7 +21,51 @@
   "build": {
     "appId": "com.dinamicisland.app",
     "productName": "Dinamic Island",
-    "files": ["src/**/*", "assets/**/*"],
-    "win": { "target": "nsis", "icon": "assets/icon.png" }
+    "copyright": "Copyright © 2026 Joan Lozano",
+    "files": [
+      "src/**/*",
+      "assets/**/*"
+    ],
+    "asarUnpack": [
+      "src/**/*.ps1"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.png",
+      "artifactName": "DinamicIsland-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Dinamic Island",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "installerLanguages": [
+        "es_ES"
+      ],
+      "language": "3082"
+    }
+  },
+  "author": "Joan Atinohael Lozano Hidalgo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Joan-Lozano/Dinamic-Island.git"
+  },
+  "homepage": "https://github.com/Joan-Lozano/Dinamic-Island#readme",
+  "bugs": {
+    "url": "https://github.com/Joan-Lozano/Dinamic-Island/issues"
   }
 }

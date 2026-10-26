@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('island', {
+contextBridge.exposeInMainWorld('islandApi', {
   onMedia: (cb) => {
     ipcRenderer.on('media:state', (_e, s) => cb(s));
     ipcRenderer.invoke('media:get').then(cb);
@@ -13,5 +13,7 @@ contextBridge.exposeInMainWorld('island', {
   openNotifSettings: () => ipcRenderer.send('notif:settings'),
   media: (cmd, value) => ipcRenderer.send('media:cmd', cmd, value),
   watchSystem: (on) => ipcRenderer.send('system:watch', !!on),
+  getSettings: () => ipcRenderer.invoke('settings:get'),
+  onSettings: (cb) => ipcRenderer.on('settings:changed', (_e, s) => cb(s)),
   setInteractive: (on) => ipcRenderer.send('island:interactive', !!on),
 });
