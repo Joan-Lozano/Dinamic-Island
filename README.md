@@ -27,13 +27,13 @@ Los cambios se aplican al instante y se guardan en `%APPDATA%/dinamic-island/set
 
 ## Código abierto y firma de código
 
-Licencia [MIT](LICENSE). Los instaladores publicados en [Releases](https://github.com/Joan-Lozano/Dinamic-Island/releases) se compilan en GitHub Actions a partir de este repositorio y se firman con SignPath.
+Licencia [MIT](LICENSE). Los instaladores publicados en [Releases](https://github.com/JoanLozano/Dinamic-Island/releases) se compilan en GitHub Actions a partir de este repositorio y se firman con SignPath.
 
 ### Code signing policy
 
 Free code signing provided by [SignPath.io](https://about.signpath.io/), certificate by [SignPath Foundation](https://signpath.org/).
 
-- **Autor, revisor y aprobador de las firmas:** [Joan-Lozano](https://github.com/Joan-Lozano). Cada versión requiere aprobación manual antes de firmarse.
+- **Autor, revisor y aprobador de las firmas:** [JoanLozano](https://github.com/JoanLozano). Cada versión requiere aprobación manual antes de firmarse.
 - Solo se firman binarios compilados desde el código de este repositorio (los scripts de compilación y de CI están en `package.json` y `.github/workflows`). La versión firmada de cada release coincide con la etiqueta `vX.Y.Z`.
 
 ### Política de privacidad

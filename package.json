@@ -62,10 +62,10 @@
   "author": "Joan Atinohael Lozano Hidalgo",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Joan-Lozano/Dinamic-Island.git"
+    "url": "git+https://github.com/JoanLozano/Dinamic-Island.git"
   },
-  "homepage": "https://github.com/Joan-Lozano/Dinamic-Island#readme",
+  "homepage": "https://github.com/JoanLozano/Dinamic-Island#readme",
   "bugs": {
-    "url": "https://github.com/Joan-Lozano/Dinamic-Island/issues"
+    "url": "https://github.com/JoanLozano/Dinamic-Island/issues"
   }
 }
