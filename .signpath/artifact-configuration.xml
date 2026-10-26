@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Configuración de artefacto para SignPath. Hay que pegarla también en SignPath
+  (Project > Artifact configurations); este archivo es la copia versionada.
+  El artefacto subido es un ZIP (upload-artifact) que contiene el instalador.
+-->
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <parameters>
+    <parameter name="version" required="true" />
+  </parameters>
+  <zip-file>
+    <pe-file path="DinamicIsland-Setup-${version}.exe" product-name="Dinamic Island" product-version="${version}">
+      <authenticode-sign />
+    </pe-file>
+  </zip-file>
+</artifact-configuration>

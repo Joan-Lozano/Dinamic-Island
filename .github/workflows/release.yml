@@ -1,0 +1,66 @@
+name: Release
+
+# Al subir una etiqueta vX.Y.Z se compila el instalador en GitHub Actions, se
+# envía a SignPath para firmarlo (requiere aprobación manual) y se publica como
+# borrador de release.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Comprobar que la etiqueta coincide con la versión de package.json
+        id: version
+        shell: bash
+        run: |
+          pkg="$(node -p "require('./package.json').version")"
+          if [ "v$pkg" != "$GITHUB_REF_NAME" ]; then
+            echo "La etiqueta $GITHUB_REF_NAME no coincide con package.json (v$pkg)"; exit 1
+          fi
+          echo "number=$pkg" >> "$GITHUB_OUTPUT"
+
+      - name: Compilar instalador (sin firmar)
+        run: npm run dist
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+      - name: Subir instalador sin firmar
+        id: upload-unsigned
+        uses: actions/upload-artifact@v4
+        with:
+          name: installer-unsigned
+          path: dist/DinamicIsland-Setup-*.exe
+
+      - name: Firmar con SignPath
+        uses: signpath/github-action-submit-signing-request@v3
+        with:
+          api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
+          organization-id: '${{ vars.SIGNPATH_ORGANIZATION_ID }}'
+          project-slug: 'dinamic-island'
+          signing-policy-slug: 'release-signing'
+          github-artifact-id: '${{ steps.upload-unsigned.outputs.artifact-id }}'
+          wait-for-completion: true
+          output-artifact-directory: signed
+          parameters: |
+            version: "${{ steps.version.outputs.number }}"
+
+      - name: Publicar borrador de release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" signed/*.exe --draft --generate-notes --title "$GITHUB_REF_NAME"
