@@ -23,7 +23,22 @@ Icono en la bandeja: **Ajustes…** (también con doble clic), mostrar/ocultar, 
 - **Inicio**: iniciar con Windows, retraso de arranque (0–60 s) e iniciar oculta.
 - **Notificaciones**: activarlas o no en la isla.
 
-Los cambios se aplican al instante y se guardan en `%APPDATA%dinamic-islandsettings.json`. `npm start -- --settings` abre el panel al arrancar.
+Los cambios se aplican al instante y se guardan en `%APPDATA%/dinamic-island/settings.json`. `npm start -- --settings` abre el panel al arrancar.
+
+## Código abierto y firma de código
+
+Licencia [MIT](LICENSE). Los instaladores publicados en [Releases](https://github.com/Joan-Lozano/Dinamic-Island/releases) se compilan en GitHub Actions a partir de este repositorio y se firman con SignPath.
+
+### Code signing policy
+
+Free code signing provided by [SignPath.io](https://about.signpath.io/), certificate by [SignPath Foundation](https://signpath.org/).
+
+- **Autor, revisor y aprobador de las firmas:** [Joan-Lozano](https://github.com/Joan-Lozano). Cada versión requiere aprobación manual antes de firmarse.
+- Solo se firman binarios compilados desde el código de este repositorio (los scripts de compilación y de CI están en `package.json` y `.github/workflows`). La versión firmada de cada release coincide con la etiqueta `vX.Y.Z`.
+
+### Política de privacidad
+
+Este programa no transfiere ninguna información a otros sistemas conectados en red. Todo lo que muestra (multimedia, notificaciones, recursos) se lee en local y los ajustes se guardan solo en tu equipo.
 
 ## Uso
 
