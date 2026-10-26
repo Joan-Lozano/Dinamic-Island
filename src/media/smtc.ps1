@@ -8,10 +8,16 @@ Add-Type -AssemblyName System.Runtime.WindowsRuntime
 
 $null = [Windows.Media.Control.GlobalSystemMediaTransportControlsSessionManager, Windows.Media.Control, ContentType = WindowsRuntime]
 $null = [Windows.Storage.Streams.IRandomAccessStreamReference, Windows.Storage.Streams, ContentType = WindowsRuntime]
+$null = [Windows.Storage.Streams.DataReader, Windows.Storage.Streams, ContentType = WindowsRuntime]
 
 $asTask = [System.WindowsRuntimeSystemExtensions].GetMethods() | Where-Object {
     $_.Name -eq 'AsTask' -and $_.GetParameters().Count -eq 1 -and
     $_.GetParameters()[0].ParameterType.Name -eq 'IAsyncOperation`1'
+} | Select-Object -First 1
+
+$asStreamForRead = [System.IO.WindowsRuntimeStreamExtensions].GetMethods() | Where-Object {
+    $_.Name -eq 'AsStreamForRead' -and $_.GetParameters().Count -eq 1 -and
+    $_.GetParameters()[0].ParameterType.Name -eq 'IInputStream'
 } | Select-Object -First 1
 
 function Await($op, [Type]$type) {
@@ -29,13 +35,15 @@ function Get-Thumb($props) {
         $stream = Await ($props.Thumbnail.OpenReadAsync()) ([Windows.Storage.Streams.IRandomAccessStreamWithContentType])
         if (-not $stream) { return $null }
         $mime = $stream.ContentType
-        $net = [System.IO.WindowsRuntimeStreamExtensions]::AsStreamForRead($stream)
+        $net = $asStreamForRead.Invoke($null, @($stream))
         $ms = New-Object System.IO.MemoryStream
         $net.CopyTo($ms)
-        $net.Dispose(); $stream.Dispose()
+        $net.Dispose()
         if ($ms.Length -eq 0) { return $null }
-        return "data:$mime;base64," + [Convert]::ToBase64String($ms.ToArray())
-    } catch { return $null }
+        $bytes = $ms.ToArray()
+        if (-not $mime) { $mime = if ($bytes[0] -eq 0x89) { 'image/png' } else { 'image/jpeg' } }
+        return "data:$mime;base64," + [Convert]::ToBase64String($bytes)
+    } catch { [Console]::Error.WriteLine("thumb: " + $_.Exception.Message); return $null }
 }
 
 # PlaybackStatus: Closed=0 Opened=1 Changing=2 Stopped=3 Playing=4 Paused=5
@@ -97,7 +105,7 @@ while ($true) {
                 $thumb = Get-Thumb $props
                 $thumbTries = 0
                 $sendThumb = $true
-            } elseif (-not $thumb -and $thumbTries -lt 6) {
+            } elseif (-not $thumb -and $thumbTries -lt 60) {
                 $thumbTries++
                 $thumb = Get-Thumb $props
                 if ($thumb) { $sendThumb = $true }
