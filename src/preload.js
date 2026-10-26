@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('island', {
+contextBridge.exposeInMainWorld('islandApi', {
   onMedia: (cb) => {
     ipcRenderer.on('media:state', (_e, s) => cb(s));
     ipcRenderer.invoke('media:get').then(cb);

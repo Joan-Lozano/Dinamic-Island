@@ -46,6 +46,8 @@ function createWindow() {
   win.setAlwaysOnTop(true, 'screen-saver');
   win.setIgnoreMouseEvents(true, { forward: true });
   place();
+  win.webContents.on('console-message', (e) => console.log('[renderer]', e.message ?? e));
+  win.webContents.on('preload-error', (_e, p, err) => console.error('[preload]', p, err));
   win.loadFile(path.join(__dirname, 'renderer', 'index.html'));
   win.once('ready-to-show', () => win.showInactive());
 

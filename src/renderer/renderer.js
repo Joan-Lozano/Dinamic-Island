@@ -15,7 +15,7 @@ let interactive = false;
 function setInteractive(on) {
   if (on === interactive) return;
   interactive = on;
-  window.island.setInteractive(on);
+  window.islandApi.setInteractive(on);
 }
 document.addEventListener('mousemove', (e) => setInteractive(!!e.target.closest('#island')));
 document.addEventListener('mouseleave', () => setInteractive(false));
@@ -59,7 +59,7 @@ function go(delta) {
   showPage();
 }
 function syncWatch() {
-  window.island.watchSystem(island.classList.contains('expanded') && page === 1);
+  window.islandApi.watchSystem(island.classList.contains('expanded') && page === 1);
 }
 $('.prev-page').onclick = () => go(-1);
 $('.next-page').onclick = () => go(1);
@@ -147,11 +147,11 @@ function renderProgress() {
 setInterval(() => { if (island.classList.contains('expanded') && page === 0) renderProgress(); }, 250);
 
 // `media.at` viene del proceso principal (mismo reloj de la máquina).
-window.island.onMedia((s) => applyMedia(s));
+window.islandApi.onMedia((s) => applyMedia(s));
 
-$('.btn-play').onclick = () => window.island.media('toggle');
-$('.btn-next').onclick = () => window.island.media('next');
-$('.btn-prev').onclick = () => window.island.media('prev');
+$('.btn-play').onclick = () => window.islandApi.media('toggle');
+$('.btn-next').onclick = () => window.islandApi.media('next');
+$('.btn-prev').onclick = () => window.islandApi.media('prev');
 
 const bar = $('.bar');
 const fracAt = (e) => {
@@ -171,7 +171,7 @@ bar.addEventListener('pointerup', (e) => {
   seeking = null;
   bar.classList.remove('drag');
   media.position = target; media.at = Date.now();
-  window.island.media('seek', target);
+  window.islandApi.media('seek', target);
 });
 
 /* ---------- Recursos ---------- */
@@ -190,7 +190,7 @@ const rate = (b) => {
 };
 const netPct = (b) => 100 * Math.min(1, Math.log10(1 + b / 1024) / 5); // escala log hasta ~100 MB/s
 
-window.island.onSystem((s) => {
+window.islandApi.onSystem((s) => {
   setTile('cpu', s.cpu + '%', s.cpu);
   setTile('ram', s.ram + '%', s.ram);
   s.gpu == null ? setTile('gpu', 'N/D', 0) : setTile('gpu', Math.round(s.gpu) + '%', s.gpu);
@@ -245,7 +245,7 @@ function renderNotifList() {
     txt.append(t, b);
     const time = document.createElement('div'); time.className = 'n-time'; time.textContent = ago(n.time);
     li.append(makeBadge(n, true), txt, time);
-    li.onclick = () => window.island.openApp(n.aumid);
+    li.onclick = () => window.islandApi.openApp(n.aumid);
     ul.append(li);
   }
 }
@@ -258,7 +258,7 @@ function renderAccess() {
   else empty.textContent = '';
   $('.settings-link').hidden = !denied;
 }
-$('.settings-link').onclick = () => window.island.openNotifSettings();
+$('.settings-link').onclick = () => window.islandApi.openNotifSettings();
 
 function showToast(n) {
   const info = classify(n);
@@ -268,7 +268,7 @@ function showToast(n) {
   $('.t-app').textContent = info.name;
   $('.t-title').textContent = n.title || '';
   $('.t-text').textContent = n.body || '';
-  toastEl.onclick = () => { window.island.openApp(n.aumid); endToast(); };
+  toastEl.onclick = () => { window.islandApi.openApp(n.aumid); endToast(); };
   setExpanded(true);
   island.classList.add('toasting');
   clearTimeout(peekTimer); peekTimer = null;
@@ -290,9 +290,9 @@ function addNotification(n, silent) {
   if (!(island.classList.contains('expanded') && page === 2)) { unread++; renderUnread(); }
   showToast(n);
 }
-window.island.onNotification((n) => addNotification(n, false));
-window.island.onNotifAccess((st) => { notifAccess = st; renderAccess(); });
-window.island.getNotifications().then(({ history, access }) => {
+window.islandApi.onNotification((n) => addNotification(n, false));
+window.islandApi.onNotifAccess((st) => { notifAccess = st; renderAccess(); });
+window.islandApi.getNotifications().then(({ history, access }) => {
   notifAccess = access;
   [...history].reverse().forEach((n) => addNotification(n, true));
   renderAccess();
