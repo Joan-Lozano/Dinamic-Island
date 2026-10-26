@@ -14,8 +14,16 @@ html, body { background: transparent; overflow: hidden; height: 100%; user-selec
   font: 13px/1.2 "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif; color: var(--fg); }
 button { all: unset; cursor: pointer; }
 
+/* Esquinas cóncavas arriba: la isla parece estirarse desde el borde de la pantalla */
+#notch { position: relative; width: max-content; margin: 0 auto; --ear: 16px; }
+#notch::before, #notch::after {
+  content: ""; position: absolute; top: 0; width: var(--ear); height: var(--ear); pointer-events: none;
+}
+#notch::before { right: 100%; background: radial-gradient(circle at 0 100%, transparent calc(var(--ear) - .5px), var(--bg) var(--ear)); }
+#notch::after { left: 100%; background: radial-gradient(circle at 100% 100%, transparent calc(var(--ear) - .5px), var(--bg) var(--ear)); }
+
 #island {
-  position: relative; margin: 0 auto;
+  position: relative;
   width: var(--w-compact); height: var(--h-compact);
   background: var(--bg);
   border-radius: 0 0 18px 18px;
