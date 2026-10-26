@@ -31,6 +31,8 @@ fs.mkdirSync(out, { recursive: true });
       getNotifications: async () => ({ history: [], access: 'Allowed' }),
       openApp: (a) => window.__calls.push(['open', a]),
       openNotifSettings: () => {},
+      getSettings: async () => ({ settings: { theme: 'dark', accent: '#30d158' } }),
+      onSettings: () => {},
     };
     navigator.getBattery = async () => Object.assign(new EventTarget(), { level: 0.82, charging: true });
   });

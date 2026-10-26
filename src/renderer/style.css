@@ -3,7 +3,7 @@
   --fg: #f4f4f6;
   --dim: rgba(255, 255, 255, .55);
   --faint: rgba(255, 255, 255, .16);
-  --green: #30d158;
+  --accent: #30d158;
   --red: #ff453a;
   --ease: cubic-bezier(.32, 1.15, .4, 1);
   --w-compact: 214px; --h-compact: 34px;
@@ -13,6 +13,21 @@
 html, body { background: transparent; overflow: hidden; height: 100%; user-select: none; -webkit-user-select: none;
   font: 13px/1.2 "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif; color: var(--fg); }
 button { all: unset; cursor: pointer; }
+
+/* Tema claro */
+:root[data-theme="light"] {
+  --bg: #f4f4f7;
+  --fg: #17171a;
+  --dim: rgba(0, 0, 0, .55);
+  --faint: rgba(0, 0, 0, .14);
+  --tile: rgba(0, 0, 0, .06);
+  --hover: rgba(0, 0, 0, .07);
+  --text2: rgba(0, 0, 0, .75);
+  --art-bg: #d8d8de;
+}
+:root[data-theme="light"] #island { box-shadow: 0 10px 30px rgba(0, 0, 0, .25); }
+:root[data-theme="light"] #island::after { box-shadow: inset 0 -1px 0 rgba(0,0,0,.08); }
+:root[data-theme="light"] .art .src { background: rgba(255,255,255,.75); }
 
 /* Esquinas cóncavas arriba: la isla parece estirarse desde el borde de la pantalla */
 #notch { position: relative; width: max-content; margin: 0 auto; --ear: 16px; }
@@ -52,8 +67,8 @@ button { all: unset; cursor: pointer; }
 .ring-bg { stroke: var(--faint); }
 .ring-fg { stroke: var(--fg); stroke-linecap: round; stroke-dasharray: 62.83; stroke-dashoffset: 62.83; transition: stroke-dashoffset .6s ease, stroke .3s; }
 .ring .bolt { fill: var(--fg); opacity: 0; transform: rotate(90deg) scale(.7); transform-origin: 12px 12px; }
-#island.charging .ring-fg { stroke: var(--green); }
-#island.charging .ring .bolt { opacity: 1; fill: var(--green); }
+#island.charging .ring-fg { stroke: var(--accent); }
+#island.charging .ring .bolt { opacity: 1; fill: var(--accent); }
 #island.low:not(.charging) .ring-fg { stroke: var(--red); }
 
 /* Ecualizador */
@@ -93,7 +108,7 @@ main { position: absolute; top: 40px; left: 46px; right: 46px; height: 108px; ov
 .page-media.idle .empty { display: flex; }
 
 .row-top { display: flex; gap: 14px; align-items: center; }
-.art { position: relative; width: 56px; height: 56px; border-radius: 9px; background: #222; flex: none; overflow: hidden; }
+.art { position: relative; width: 56px; height: 56px; border-radius: 9px; background: var(--art-bg); flex: none; overflow: hidden; }
 .art img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .art img:not([src]) { display: none; }
 .art .src { position: absolute; right: 3px; bottom: 3px; font-size: 9px; font-weight: 700; padding: 1px 4px; border-radius: 6px; background: rgba(0,0,0,.6); }
@@ -125,11 +140,11 @@ main { position: absolute; top: 40px; left: 46px; right: 46px; height: 108px; ov
 
 /* Recursos */
 .page-system { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.tile { background: rgba(255,255,255,.07); border-radius: 12px; padding: 6px 10px 8px; min-height: 0; display: flex; flex-direction: column; justify-content: space-between; }
+.tile { background: var(--tile); border-radius: 12px; padding: 6px 10px 8px; min-height: 0; display: flex; flex-direction: column; justify-content: space-between; }
 .tile .lbl { font-size: 10.5px; color: var(--dim); }
 .tile .val { font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .meter { height: 4px; border-radius: 2px; background: var(--faint); overflow: hidden; }
-.meter div { height: 100%; width: 0; border-radius: 2px; background: var(--green); transition: width .6s ease, background .3s; }
+.meter div { height: 100%; width: 0; border-radius: 2px; background: var(--accent); transition: width .6s ease, background .3s; }
 .meter div.warn { background: #ffd60a; }
 .meter div.hot { background: var(--red); }
 
@@ -156,7 +171,7 @@ main { position: absolute; top: 40px; left: 46px; right: 46px; height: 108px; ov
 .t-body { min-width: 0; flex: 1; }
 .t-app { font-size: 11px; color: var(--dim); }
 .t-title { font-size: 15px; font-weight: 700; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.t-text { margin-top: 3px; color: rgba(255,255,255,.8); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
+.t-text { margin-top: 3px; color: var(--text2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.3; }
 
 .page-notifs .empty { display: flex; flex-direction: column; gap: 6px; text-align: center; padding: 0 10px; }
 .page-notifs .empty:empty { display: none; }
@@ -164,7 +179,7 @@ main { position: absolute; top: 40px; left: 46px; right: 46px; height: 108px; ov
 .settings-link[hidden] { display: none; }
 .notif-list { list-style: none; padding: 0; position: absolute; inset: 0; display: flex; flex-direction: column; gap: 4px; }
 .notif-list li { display: flex; align-items: center; gap: 10px; height: 32px; padding: 0 6px; border-radius: 10px; cursor: pointer; transition: background .15s; }
-.notif-list li:hover { background: rgba(255,255,255,.08); }
+.notif-list li:hover { background: var(--hover); }
 .notif-list .n-text { flex: 1; min-width: 0; }
 .notif-list .n-title { font-weight: 600; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .notif-list .n-body { font-size: 11px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

@@ -14,7 +14,16 @@ se expande al pasar el ratón (o al cambiar de canción) y muestra:
 - **Batería** (anillo verde al cargar), **fecha y hora**.
 
 Cambia de página con las flechas `‹ ›`, los puntos o el scroll horizontal. Fuera de la isla los clics pasan a las ventanas de debajo.
-Icono en la bandeja: mostrar/ocultar, *iniciar con Windows*, salir.
+Icono en la bandeja: **Ajustes…** (también con doble clic), mostrar/ocultar, *iniciar con Windows*, salir.
+
+## Panel de ajustes
+
+- **Pantalla**: en qué monitor aparece la isla (con botón *Identificar pantallas*).
+- **Apariencia**: tema oscuro / claro / automático (sigue a Windows) y color de acento.
+- **Inicio**: iniciar con Windows, retraso de arranque (0–60 s) e iniciar oculta.
+- **Notificaciones**: activarlas o no en la isla.
+
+Los cambios se aplican al instante y se guardan en `%APPDATA%dinamic-islandsettings.json`. `npm start -- --settings` abre el panel al arrancar.
 
 ## Uso
 
@@ -22,7 +31,8 @@ Icono en la bandeja: mostrar/ocultar, *iniciar con Windows*, salir.
 npm install
 npm start          # Windows: usa SMTC real
 npm run start:mock # reproductor simulado (también se activa solo fuera de Windows)
-npm run dist       # instalador NSIS en dist/
+npm run dist       # instalador NSIS en dist/DinamicIsland-Setup-<versión>.exe
+npm run dist:dir   # solo la app desempaquetada (dist/win-unpacked), más rápido
 ```
 
 Requiere Windows 10 1809+ con Windows PowerShell 5.1 (incluido por defecto).

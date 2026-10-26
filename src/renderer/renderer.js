@@ -308,3 +308,19 @@ showPage = function () {
   if (page === 2) { unread = 0; renderUnread(); renderNotifList(); }
 };
 setInterval(() => { if (page === 2) renderNotifList(); }, 30000);
+
+/* ---------- Ajustes (tema y acento) ---------- */
+const lightQuery = window.matchMedia('(prefers-color-scheme: light)');
+let currentTheme = 'dark';
+function applyTheme() {
+  const t = currentTheme === 'auto' ? (lightQuery.matches ? 'light' : 'dark') : currentTheme;
+  document.documentElement.dataset.theme = t;
+}
+function applySettings({ settings }) {
+  currentTheme = settings.theme;
+  document.documentElement.style.setProperty('--accent', settings.accent);
+  applyTheme();
+}
+lightQuery.addEventListener('change', applyTheme);
+window.islandApi.getSettings().then(applySettings);
+window.islandApi.onSettings(applySettings);

@@ -13,5 +13,7 @@ contextBridge.exposeInMainWorld('islandApi', {
   openNotifSettings: () => ipcRenderer.send('notif:settings'),
   media: (cmd, value) => ipcRenderer.send('media:cmd', cmd, value),
   watchSystem: (on) => ipcRenderer.send('system:watch', !!on),
+  getSettings: () => ipcRenderer.invoke('settings:get'),
+  onSettings: (cb) => ipcRenderer.on('settings:changed', (_e, s) => cb(s)),
   setInteractive: (on) => ipcRenderer.send('island:interactive', !!on),
 });
